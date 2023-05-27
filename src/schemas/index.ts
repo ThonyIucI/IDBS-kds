@@ -1,21 +1,23 @@
 export interface Product{
-    id: string
+    id: number
     name: string
     description: string
     price: number
     amount:number
 }
-interface Customer {
+export interface Customer {
     id: string
     name: string
     address: string
 }
 export interface Order{
     id: string
-    dateTime: Date
+    startTime: string
+    endTime: string
     code: string
     estimatedTime: number 
     customer: Customer
     products: Product[]
     totalPrice: number
+    status: "pending"|"in process"|"completed"|"canceled"
 }
