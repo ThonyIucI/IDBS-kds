@@ -11,7 +11,7 @@ interface stateTypes {
 }
 const initialState: stateTypes = {
     orders: [],
-    backupOrders:[],
+    backupOrders: [],
     mainOrder: null,
     oderStatuses: [
         { id: 1, name: 'Pendiente' },  //->no inicia
@@ -20,7 +20,7 @@ const initialState: stateTypes = {
         { id: 4, name: 'Cancelado' },//->se canceló
     ],
     pendingOrder: false,
-    statusSelected:0
+    statusSelected: 0
 
 }
 
@@ -39,18 +39,39 @@ export const orderSlice = createSlice({
             state.pendingOrder = payload
         },
         setFilterByStatus(state, { payload }: PayloadAction<number>) {
-            state.statusSelected=payload
-            if(!payload) state.orders=state.backupOrders
-            else state.orders = state.backupOrders.filter((order)=>order.statusId===payload)
-        },
-        setFinishedOrder(state, { payload }: PayloadAction<number>) {
             state.statusSelected = payload
             if (!payload) state.orders = state.backupOrders
             else state.orders = state.backupOrders.filter((order) => order.statusId === payload)
+        },
+        setOrderStatus(state, { payload }: PayloadAction<{ orderId: string, newStatusId: number }>) {
+            // const oderToChange=state.backupOrders.find((order)=>Number(order.id)===payload.orderId)
+            console.log(payload);
+            
+            const NewOrders = state.backupOrders.map((order) => {
+                if (order.id === payload.orderId) {
+                    console.log({
+                        ...order,
+                        endTime:new Date().toISOString(),
+                        statusId: payload.newStatusId,
+                        status: state.oderStatuses.find(status => status.id === payload.newStatusId)
+                    });
+                    return {
+                        ...order,
+                        statusId: payload.newStatusId,
+                        status: state.oderStatuses.find(status => status.id === payload.newStatusId)??null
+                    }
+                   
+                    
+                }
+                return order
+
+            })
+            state.orders = NewOrders
+            state.backupOrders = NewOrders
         }
     }
 })
 
 // : PayloadAction<{ name: string }>
-export const { setOrders, setPendingOrder, setMainOrder, setFilterByStatus, setFinishedOrder } = orderSlice.actions
+export const { setOrders, setPendingOrder, setMainOrder, setFilterByStatus, setOrderStatus } = orderSlice.actions
 export default orderSlice.reducer

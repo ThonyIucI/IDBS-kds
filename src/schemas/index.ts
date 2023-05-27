@@ -25,6 +25,6 @@ export interface Order{
     products: Product[]
     totalPrice: number
     statusId: number
-    status: OrderStatus
+    status: OrderStatus|null
     
 }

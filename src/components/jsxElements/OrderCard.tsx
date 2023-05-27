@@ -3,7 +3,7 @@ import { Order } from '@/schemas';
 import { FC } from 'react';
 import { Button, ButtonContainer } from '../styledElements';
 import { Card, CardHeader, ProductDescription, ProductItem, ProductList, TextBold, ProductTitle, StyledLabel } from '../styledElements/Orders';
-
+import ActionButtons from './ActionButtons';
 interface props {
     order: Order
 }
@@ -39,6 +39,8 @@ const OrderCard: FC<props> = ({ order }) => {
                     break;
             }
         }
+       
+        
     return (
         <Card>
             <CardHeader color={setcolor(order)
@@ -68,16 +70,7 @@ const OrderCard: FC<props> = ({ order }) => {
                 ))}
             </ProductList>
             <ButtonContainer>
-                {order.statusId === 1 ?
-                    <Button filled color='primary'>Empezar</Button>:
-                       order.statusId===4?
-                        <StyledLabel>CANCELADO</StyledLabel> : 
-                    <>
-                       <Button filled color='success'>Completar</Button>
-                        <Button filled color='error'>Cancelar</Button>
-                    </>
-                    
-                }
+                <ActionButtons id={order.statusId} orderId={order.id} key={order.id}/>
             </ButtonContainer>
         </Card>);
 }

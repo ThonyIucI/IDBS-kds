@@ -59,7 +59,7 @@ const generateRandomOrder = (): Order => {
     // const randomStatus: Order['status'] =
     //     Math.random() < 0.33 ? 'pending' : Math.random() < 0.66 ? 'completed' : 'canceled'
     const randomStatus = oderStatuses[Math.floor(Math.random() *4)]
-    console.log(randomStatus);
+    // console.log(randomStatus);
     
     return {
         id: randomId,

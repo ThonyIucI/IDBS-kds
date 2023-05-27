@@ -61,10 +61,14 @@ export const ProductDescription = styled.span`
   grid-column: span 2;
   color: gray;
   margin-left:30px
-`;
-export const StyledLabel = styled.h2`
-  border: 2px solid ${(props) => props.theme.colors.error};
-  color: ${(props) => props.theme.colors.error};
+`; 
+interface props {
+  color?: Color
+}
+export const StyledLabel = styled.h2<props>`
+  border: 2px solid ${(props) => props.theme.colors[props.color || 'primary']};
+  color: ${(props) => props.theme.colors[props.color || 'primary']};
   padding: 8px;
   display: inline-block;
+  margin: 0;
 `;
