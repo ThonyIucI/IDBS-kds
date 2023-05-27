@@ -4,10 +4,13 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 interface stateTypes {
     orders: Order[],
     mainOrder:Order|null
+    pendingOrder:boolean
 }
 const initialState: stateTypes = {
     orders: [],
-    mainOrder: null
+    mainOrder: null,
+    pendingOrder: false
+
 }
 
 export const orderSlice = createSlice({
@@ -19,10 +22,13 @@ export const orderSlice = createSlice({
         },
         setMainOrder(state, { payload }: PayloadAction<Order>) {
             state.mainOrder = payload
+        },
+        setPendingOrder(state, { payload }: PayloadAction<boolean>) {
+            state.pendingOrder = payload
         }
     }
 })
 
 // : PayloadAction<{ name: string }>
-export const { setOrders } = orderSlice.actions
+export const { setOrders, setPendingOrder,setMainOrder } = orderSlice.actions
 export default orderSlice.reducer
