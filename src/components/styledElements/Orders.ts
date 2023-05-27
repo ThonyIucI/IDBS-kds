@@ -62,10 +62,8 @@ export const ProductDescription = styled.span`
   color: gray;
   margin-left:30px
 `; 
-interface props {
-  color?: Color
-}
-export const StyledLabel = styled.h2<props>`
+
+export const StyledLabel = styled.h2<propsy>`
   border: 2px solid ${(props) => props.theme.colors[props.color || 'primary']};
   color: ${(props) => props.theme.colors[props.color || 'primary']};
   padding: 8px;

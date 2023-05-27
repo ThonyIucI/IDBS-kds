@@ -64,7 +64,7 @@ const generateRandomOrder = (): Order => {
     return {
         id: randomId,
         startTime:randomStatus.id===1?'': randomDateTime.toISOString(),
-        endTime:'',
+        endTime: randomStatus.id === 4 ? getHourFromISO(generateRandomDate().toISOString()) : '',
         code: randomCode,
         estimatedTime: randomEstimatedTime,
         customer: randomCustomer,
@@ -93,3 +93,18 @@ export const getOrders = () => async (dispatch: AppDispatch) => {
 
     }
 }
+export const getHourFromISO = (isoDateString: string) => {
+    const date = new Date(isoDateString);
+    const hour = date.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+    return hour;
+};
+
+
+
+
+
+

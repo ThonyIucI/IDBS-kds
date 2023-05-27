@@ -7,6 +7,8 @@ margin-top:80px;
   justify-content: center;
   align-items: center;
   padding: ${(props) =>(props.theme.mediaQueries.small ? '0' : '20px')};
+  padding:20px;
 `;
+
 
 export default Container;

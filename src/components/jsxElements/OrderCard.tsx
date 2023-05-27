@@ -9,6 +9,7 @@ interface props {
 }
 const OrderCard: FC<props> = ({ order }) => {
     const getDeliverTime = (order: Order) => {
+        if(!order.startTime) return "--:--"
         const startTime = new Date(order.startTime);
         const startTimeMilliseconds = startTime.getTime();
         const estimatedTimeMilliseconds = order.estimatedTime * 60000;
@@ -18,7 +19,7 @@ const OrderCard: FC<props> = ({ order }) => {
 
         // Ejemplo de obtención de componentes de fecha y hora
         const deliveryHour = deliveryTime.getHours();
-        const deliveryMinutes = deliveryTime.getMinutes();
+        const deliveryMinutes = String(deliveryTime.getMinutes()).padStart(2, '0');
         return `${deliveryHour}:${deliveryMinutes}`
     },
         setcolor = (order: Order) => {

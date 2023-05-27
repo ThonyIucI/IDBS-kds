@@ -10,13 +10,15 @@ import { FC, useEffect } from "react";
 
 const Home: FC = () => {
     const dispatch = useAppDispatch(),
-        { orders, pendingOrder } = useAppSelector(store => store.orders)
+        { orders, pendingOrder,backupOrders } = useAppSelector(store => store.orders)
 
     useEffect(() => {
-        if (!orders.length) {
+        if (!backupOrders.length) {
+            console.log(backupOrders.length,'total?');
+            
             dispatch(getOrders())
         }
-    }, [dispatch])
+    }, [])
     return (<>
       <Navbar/>
         <Container>

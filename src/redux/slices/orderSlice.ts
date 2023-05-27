@@ -1,5 +1,6 @@
 import { Order, OrderStatus } from '@/schemas'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import { getHourFromISO } from '../actions/orderActions'
 
 interface stateTypes {
     orders: Order[],
@@ -44,24 +45,14 @@ export const orderSlice = createSlice({
             else state.orders = state.backupOrders.filter((order) => order.statusId === payload)
         },
         setOrderStatus(state, { payload }: PayloadAction<{ orderId: string, newStatusId: number }>) {
-            // const oderToChange=state.backupOrders.find((order)=>Number(order.id)===payload.orderId)
-            console.log(payload);
-            
             const NewOrders = state.backupOrders.map((order) => {
                 if (order.id === payload.orderId) {
-                    console.log({
-                        ...order,
-                        endTime:new Date().toISOString(),
-                        statusId: payload.newStatusId,
-                        status: state.oderStatuses.find(status => status.id === payload.newStatusId)
-                    });
                     return {
                         ...order,
                         statusId: payload.newStatusId,
-                        status: state.oderStatuses.find(status => status.id === payload.newStatusId)??null
+                        status: state.oderStatuses.find(status => status.id === payload.newStatusId) ?? null,
+                        endTime: payload.newStatusId === (4||3 )? getHourFromISO(new Date().toISOString()) : '',
                     }
-                   
-                    
                 }
                 return order
 
@@ -72,6 +63,5 @@ export const orderSlice = createSlice({
     }
 })
 
-// : PayloadAction<{ name: string }>
 export const { setOrders, setPendingOrder, setMainOrder, setFilterByStatus, setOrderStatus } = orderSlice.actions
 export default orderSlice.reducer
