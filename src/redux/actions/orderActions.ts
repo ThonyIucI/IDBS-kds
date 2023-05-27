@@ -41,6 +41,19 @@ const generateRandomProducts=()=>{
         (product, index, self) => index === self.findIndex((p) => p.id === product.id)
     );
     return uniqueProducts
+}    
+const getDeliverTime = (dateToShow: string,estimatedTime:number) => {
+    const startTime = new Date(dateToShow);
+    const startTimeMilliseconds = startTime.getTime();
+    const estimatedTimeMilliseconds = estimatedTime * 60000;
+    const deliveryTimeMilliseconds = startTimeMilliseconds + estimatedTimeMilliseconds;
+
+    const deliveryTime = new Date(deliveryTimeMilliseconds);
+
+    // Ejemplo de obtención de componentes de fecha y hora
+    const deliveryHour = deliveryTime.getHours();
+    const deliveryMinutes = String(deliveryTime.getMinutes()).padStart(2, '0');
+    return `${deliveryHour}:${deliveryMinutes}`
 }
 // Generar datos aleatorios para las órdenes
 const generateRandomOrder = (): Order => {
@@ -64,7 +77,9 @@ const generateRandomOrder = (): Order => {
     return {
         id: randomId,
         startTime:randomStatus.id===1?'': randomDateTime.toISOString(),
-        endTime: randomStatus.id === 4 ? getHourFromISO(generateRandomDate().toISOString()) : '',
+        estimatedFinished: randomStatus.id === 2 ?
+         getDeliverTime(randomDateTime.toISOString(), randomEstimatedTime) :"--:--",
+        endTime: (randomStatus.id === 4) || (randomStatus.id===3) ? getHourFromISO(generateRandomDate().toISOString()) : '',
         code: randomCode,
         estimatedTime: randomEstimatedTime,
         customer: randomCustomer,

@@ -14,8 +14,6 @@ const Home: FC = () => {
 
     useEffect(() => {
         if (!backupOrders.length) {
-            console.log(backupOrders.length,'total?');
-            
             dispatch(getOrders())
         }
     }, [])

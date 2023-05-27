@@ -39,7 +39,7 @@ const Navbar = () => {
 
     return (
         <NavbarContainer>
-            <Title>IDBI</Title>
+            <Title>IDBI-SDK</Title>
             <Dropdown value={statusSelected} onChange={handleFilterChange}>
                 <Option value={0}>Ver todas</Option>
                 <Option value={1}>Pendiente</Option>

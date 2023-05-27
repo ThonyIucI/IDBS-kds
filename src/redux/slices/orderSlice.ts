@@ -51,7 +51,8 @@ export const orderSlice = createSlice({
                         ...order,
                         statusId: payload.newStatusId,
                         status: state.oderStatuses.find(status => status.id === payload.newStatusId) ?? null,
-                        endTime: payload.newStatusId === (4||3 )? getHourFromISO(new Date().toISOString()) : '',
+                        endTime: (payload.newStatusId === 4) || (payload.newStatusId === 3) ? getHourFromISO(new Date().toISOString()) : '',
+                        startTime: payload.newStatusId === 2 ? getHourFromISO(new Date().toISOString()) : order.startTime,
                     }
                 }
                 return order
