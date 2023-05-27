@@ -1,4 +1,5 @@
 
+import Navbar from "@/components/jsxElements/Navbar";
 import OrderCard from "@/components/jsxElements/OrderCard";
 import { Container, LoaderContainer, Spinner } from "@/components/styledElements";
 import { OrdersContainer } from "@/components/styledElements/Orders";
@@ -16,7 +17,8 @@ const Home: FC = () => {
             dispatch(getOrders())
         }
     }, [dispatch])
-    return (
+    return (<>
+      <Navbar/>
         <Container>
             {!pendingOrder ?
                 (orders?.length ?
@@ -35,6 +37,8 @@ const Home: FC = () => {
 
             }
         </Container>
+    </>
+          
     )
 }
 

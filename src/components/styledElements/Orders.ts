@@ -29,6 +29,9 @@ export const CardHeader = styled.div<propsy>`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+ border-top-left-radius: 8px;
+ border-top-right-radius: 8px;
+
   color:white;
     padding: 16px;
     
@@ -58,4 +61,10 @@ export const ProductDescription = styled.span`
   grid-column: span 2;
   color: gray;
   margin-left:30px
+`;
+export const StyledLabel = styled.h2`
+  border: 2px solid ${(props) => props.theme.colors.error};
+  color: ${(props) => props.theme.colors.error};
+  padding: 8px;
+  display: inline-block;
 `;

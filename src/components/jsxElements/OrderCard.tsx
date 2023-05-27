@@ -2,7 +2,7 @@
 import { Order } from '@/schemas';
 import { FC } from 'react';
 import { Button, ButtonContainer } from '../styledElements';
-import { Card, CardHeader, ProductDescription, ProductItem, ProductList, TextBold, ProductTitle } from '../styledElements/Orders';
+import { Card, CardHeader, ProductDescription, ProductItem, ProductList, TextBold, ProductTitle, StyledLabel } from '../styledElements/Orders';
 
 interface props {
     order: Order
@@ -20,14 +20,31 @@ const OrderCard: FC<props> = ({ order }) => {
         const deliveryHour = deliveryTime.getHours();
         const deliveryMinutes = deliveryTime.getMinutes();
         return `${deliveryHour}:${deliveryMinutes}`
-    }
-    
+    },
+        setcolor = (order: Order) => {
+            switch (order.statusId) {
+                case 1:
+                    return 'secondary'
+                case 2:
+                    return new Date(order.startTime).getTime() + order.estimatedTime * 60000 > Date.now()
+                        ? 'primary'
+                        : 'secondary'
+                // return 'primary'
+                case 3:
+                    return 'success'
+                case 4:
+                    return 'error'
+
+                default:
+                    break;
+            }
+        }
     return (
         <Card>
-            <CardHeader color={
-                new Date(order.startTime).getTime() + order.estimatedTime * 60000 > Date.now()
-                    ? 'secondary'
-                    : 'error'
+            <CardHeader color={setcolor(order)
+                // new Date(order.startTime).getTime() + order.estimatedTime * 60000 > Date.now()
+                //     ? 'primary'
+                //     : 'secondary'
             }>
                 <div>
                     <TextBold>{getDeliverTime(order)}</TextBold>
@@ -51,8 +68,16 @@ const OrderCard: FC<props> = ({ order }) => {
                 ))}
             </ProductList>
             <ButtonContainer>
-                <Button filled color='success'>Completado</Button>
-                <Button filled color='info'>Cancelar</Button>
+                {order.statusId === 1 ?
+                    <Button filled color='primary'>Empezar</Button>:
+                       order.statusId===4?
+                        <StyledLabel>CANCELADO</StyledLabel> : 
+                    <>
+                       <Button filled color='success'>Completar</Button>
+                        <Button filled color='error'>Cancelar</Button>
+                    </>
+                    
+                }
             </ButtonContainer>
         </Card>);
 }

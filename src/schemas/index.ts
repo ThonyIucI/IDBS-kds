@@ -10,6 +10,11 @@ export interface Customer {
     name: string
     address: string
 }
+export interface OrderStatus{
+    id:number
+    name:string
+}
+export type Statuses ="Pendiente" | "En proceso" | "Completado" | "Cancelado"
 export interface Order{
     id: string
     startTime: string
@@ -19,5 +24,7 @@ export interface Order{
     customer: Customer
     products: Product[]
     totalPrice: number
-    status: "pending"|"in process"|"completed"|"canceled"
+    statusId: number
+    status: OrderStatus
+    
 }

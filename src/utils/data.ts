@@ -1,3 +1,5 @@
+import { OrderStatus } from "@/schemas"
+
 export const PosibleProducts = [
     {
         id: 1,
@@ -35,4 +37,10 @@ export const PosibleProducts = [
         descriptions: ['', 'atún premium', 'de caballa', 'sin aceituna'],
         price: 10,
     },
+]
+export const oderStatuses:OrderStatus[]= [
+    { id: 1, name: 'pending' },  //->no inicia
+    { id: 2, name: 'in process' },//->inicia cuando se le da start
+    { id: 3, name: 'completed' },//->finalizado
+    { id: 4, name: 'canceled' },//->se canceló
 ]

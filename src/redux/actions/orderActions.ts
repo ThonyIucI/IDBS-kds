@@ -1,7 +1,7 @@
 import { Customer, Order, Product } from "@/schemas"
 import { AppDispatch } from "../store"
 import { setOrders, setPendingOrder } from "../slices/orderSlice"
-import { PosibleProducts } from "@/utils/data"
+import { PosibleProducts, oderStatuses } from "@/utils/data"
 
 // Generar código aleatorio
 const generateSaleCode = (): string => {
@@ -56,19 +56,22 @@ const generateRandomOrder = (): Order => {
     const randomProducts = generateRandomProducts()
     const randomTotalPrice =
         randomProducts.reduce((acc, product) => acc + product.price * product.amount, 0)
-    const randomStatus: Order['status'] =
-        Math.random() < 0.33 ? 'pending' : Math.random() < 0.66 ? 'completed' : 'canceled'
-
+    // const randomStatus: Order['status'] =
+    //     Math.random() < 0.33 ? 'pending' : Math.random() < 0.66 ? 'completed' : 'canceled'
+    const randomStatus = oderStatuses[Math.floor(Math.random() *4)]
+    console.log(randomStatus);
+    
     return {
         id: randomId,
-        startTime: randomDateTime.toISOString(),
+        startTime:randomStatus.id===1?'': randomDateTime.toISOString(),
         endTime:'',
         code: randomCode,
         estimatedTime: randomEstimatedTime,
         customer: randomCustomer,
         products: randomProducts,
         totalPrice: randomTotalPrice,
-        status: randomStatus,
+        statusId: randomStatus.id,
+        status: randomStatus
     }
 }
 export const getOrders = () => async (dispatch: AppDispatch) => {
