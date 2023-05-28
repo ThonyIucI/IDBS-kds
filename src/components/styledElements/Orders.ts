@@ -21,6 +21,9 @@ export const Card = styled.div`
   width: 250px;
   border: 1px solid gray;
   border-radius: 8px;
+  &:hover{
+    transform: scale(1.01)
+  }
 `;
 
 export const CardHeader = styled.div<propsy>`
@@ -61,7 +64,7 @@ export const ProductDescription = styled.span`
   grid-column: span 2;
   color: gray;
   margin-left:30px
-`; 
+`;
 
 export const StyledLabel = styled.h2<propsy>`
   border: 2px solid ${(props) => props.theme.colors[props.color || 'primary']};
