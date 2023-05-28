@@ -2,6 +2,7 @@ import { useAppDispatch } from "@/hooks/redux";
 import { setOrderStatus } from "@/redux/slices/orderSlice";
 import { Button } from "../styledElements";
 import { StyledLabel } from "../styledElements/Orders";
+import { setAlert } from "@/redux/slices/assetsSlice";
 
 interface Props {
     id: number;
@@ -12,6 +13,7 @@ const ActionButtons: React.FC<Props> = ({ id, orderId }) => {
     const dispatch = useAppDispatch(),
         handleChangeStatus = (newStatusId: number, orderId: string) => {
             dispatch(setOrderStatus({ newStatusId, orderId }))
+            dispatch(setAlert({color: 'success', message: `Orden ${orderId} actualizada correctamente`, show: true }));
         }
     switch (id) {
         case 2:

@@ -2,6 +2,7 @@ import { Customer, Order, Product } from "@/schemas"
 import { AppDispatch } from "../store"
 import { setOrders, setPendingOrder } from "../slices/orderSlice"
 import { PosibleProducts, orderStatuses } from "@/utils/data"
+import { setAlert } from "../slices/assetsSlice"
 
 // Generar código ordenado
 const generateSaleCode = (index: number): string => {
@@ -103,7 +104,6 @@ export const getOrders = () => async (dispatch: AppDispatch) => {
                 //Genera 40 elementos aleatoriamente
                 for (let index = 0; index < 40; index++) {
                     orders.push(generateRandomOrder(index))
-
                 }
 
                 dispatch(setOrders(orders))
@@ -111,7 +111,7 @@ export const getOrders = () => async (dispatch: AppDispatch) => {
             }, 2000)
         })
     } catch (error) {
-        console.log(error)
+        dispatch(setAlert({ color:'error', message: 'Ups, sucedió un error', show: true }));
     } finally {
         dispatch(setPendingOrder(false))
 

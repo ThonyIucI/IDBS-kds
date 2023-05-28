@@ -2,6 +2,7 @@ import { Action, ThunkAction, configureStore } from '@reduxjs/toolkit'
 import orderSlice from './slices/orderSlice'
 import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import assetsSlice from './slices/assetsSlice';
 
 const persistOrdersConfig = {
     key: 'orders',
@@ -13,7 +14,8 @@ export const store = configureStore({
         orders: persistReducer<ReturnType<typeof orderSlice>>(
             persistOrdersConfig,
             orderSlice
-        )
+        ),
+        assets: assetsSlice
     },
     middleware: (defaultMiddleware) =>
         defaultMiddleware({

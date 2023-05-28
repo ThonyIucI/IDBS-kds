@@ -1,4 +1,5 @@
 
+import Alert from "@/components/jsxElements/Alert";
 import Navbar from "@/components/jsxElements/Navbar";
 import OrderCard from "@/components/jsxElements/OrderCard";
 import { Container, LoaderContainer, Spinner } from "@/components/styledElements";
@@ -10,9 +11,10 @@ import { FC, useEffect } from "react";
 
 const Home: FC = () => {
     const dispatch = useAppDispatch(),
-        { orders, pendingOrder,backupOrders,orderStatuses,statusSelected } = useAppSelector(store => store.orders)
-
-    useEffect(() => {
+    { orders, pendingOrder,backupOrders,orderStatuses,statusSelected } = useAppSelector(store => store.orders)
+    
+    
+        useEffect(() => {
         if (!backupOrders.length) {
             dispatch(getOrders())
         }
@@ -20,6 +22,7 @@ const Home: FC = () => {
     return (<>
       <Navbar/>
         <Container>
+      <Alert/>
             {!pendingOrder ?
                 (orders?.length ?
                     <OrdersContainer>
