@@ -1,24 +1,44 @@
 import { Customer, Order, Product } from "@/schemas"
 import { AppDispatch } from "../store"
 import { setOrders, setPendingOrder } from "../slices/orderSlice"
-import { PosibleProducts, oderStatuses } from "@/utils/data"
+import { PosibleProducts, orderStatuses } from "@/utils/data"
 
 // Generar código aleatorio
-const generateSaleCode = (): string => {
-    const min = 1000,
-        max = 9999,
-        randomNumber = Math.floor(Math.random() * (max - min + 1)) + min
-    return `IDBI-${randomNumber}`
+const generateSaleCode = (index: number): string => {
+    return `IDBI-${index+1000}`
 }
 // Obtener una fecha aleatoria menor a la última hora actual
-const generateRandomDate = (): Date => {
+export const generateRandomTime = (): string => {
     const currentDate = new Date();
-    const randomMinutes = Math.floor(Math.random() * currentDate.getMinutes());
-    const randomDate = new Date();
-    randomDate.setDate(currentDate.getDate());
-    randomDate.setHours(currentDate.getHours());
-    randomDate.setMinutes(randomMinutes);
-    return randomDate;
+    const randomMinutes = Math.floor(Math.random() * 60);
+    const randomTime = new Date();
+    randomTime.setHours(currentDate.getHours());
+    randomTime.setMinutes(randomMinutes);
+
+    const formattedHour = randomTime.getHours().toString().padStart(2, '0');
+    const formattedMinute = randomTime.getMinutes().toString().padStart(2, '0');
+
+    return `${formattedHour}:${formattedMinute}`;
+};
+export const addMinutesToTime = (time: string, minutesToAdd: number): string => {
+    const [hourStr, minuteStr] = time.split(':');
+    let hour = parseInt(hourStr, 10);
+    let minute = parseInt(minuteStr, 10);
+
+    // Sumar los minutos
+    minute += minutesToAdd;
+
+    // Ajustar si los minutos superan los 60
+    if (minute >= 60) {
+        hour += Math.floor(minute / 60);
+        minute %= 60;
+    }
+
+    // Formatear nuevamente la hora y los minutos
+    const formattedHour = hour.toString().padStart(2, '0');
+    const formattedMinute = minute.toString().padStart(2, '0');
+
+    return `${formattedHour}:${formattedMinute}`;
 };
 const generateRandomProducts=()=>{
     const products:Product[]=[]
@@ -42,24 +62,12 @@ const generateRandomProducts=()=>{
     );
     return uniqueProducts
 }    
-const getDeliverTime = (dateToShow: string,estimatedTime:number) => {
-    const startTime = new Date(dateToShow);
-    const startTimeMilliseconds = startTime.getTime();
-    const estimatedTimeMilliseconds = estimatedTime * 60000;
-    const deliveryTimeMilliseconds = startTimeMilliseconds + estimatedTimeMilliseconds;
 
-    const deliveryTime = new Date(deliveryTimeMilliseconds);
-
-    // Ejemplo de obtención de componentes de fecha y hora
-    const deliveryHour = deliveryTime.getHours();
-    const deliveryMinutes = String(deliveryTime.getMinutes()).padStart(2, '0');
-    return `${deliveryHour}:${deliveryMinutes}`
-}
 // Generar datos aleatorios para las órdenes
-const generateRandomOrder = (): Order => {
+const generateRandomOrder = (index:number): Order => {
     const randomId = Math.random().toString(36).slice(2, 9)
-    const randomDateTime = generateRandomDate()
-    const randomCode = generateSaleCode()
+    const randomDateTime = generateRandomTime()
+    const randomCode = generateSaleCode(index)
     const randomEstimatedTime = Math.floor(Math.random() * 60) + 1
     const randomCustomer: Customer = {
         id: Math.random().toString(36).slice(2, 9),
@@ -69,17 +77,14 @@ const generateRandomOrder = (): Order => {
     const randomProducts = generateRandomProducts()
     const randomTotalPrice =
         randomProducts.reduce((acc, product) => acc + product.price * product.amount, 0)
-    // const randomStatus: Order['status'] =
-    //     Math.random() < 0.33 ? 'pending' : Math.random() < 0.66 ? 'completed' : 'canceled'
-    const randomStatus = oderStatuses[Math.floor(Math.random() *4)]
-    // console.log(randomStatus);
+    const randomStatus = orderStatuses[Math.floor(Math.random() *4)]
     
     return {
         id: randomId,
-        startTime:randomStatus.id===1?'': randomDateTime.toISOString(),
-        estimatedFinished: randomStatus.id === 2 ?
-         getDeliverTime(randomDateTime.toISOString(), randomEstimatedTime) :"--:--",
-        endTime: (randomStatus.id === 4) || (randomStatus.id===3) ? getHourFromISO(generateRandomDate().toISOString()) : '',
+        startTime: randomStatus.id === 1 ? "--:--" : randomDateTime,
+        estimatedFinished: randomStatus.id === 1 ? "--:--" :
+            addMinutesToTime(randomDateTime, randomEstimatedTime),
+        endTime: (randomStatus.id === 4) || (randomStatus.id === 3) ? addMinutesToTime(randomDateTime, randomEstimatedTime) : '',
         code: randomCode,
         estimatedTime: randomEstimatedTime,
         customer: randomCustomer,
@@ -91,12 +96,16 @@ const generateRandomOrder = (): Order => {
 }
 export const getOrders = () => async (dispatch: AppDispatch) => {
     try {
-        let orders: Order[] = []
+        const orders: Order[] = []
         dispatch(setPendingOrder(true))
         await new Promise<void>((resolve) => {
             setTimeout(() => {
                 //Genera 20 elementos aleatoriamente
-                orders = Array.from({ length: 20 }, () => generateRandomOrder())
+                for (let index = 0; index < 30; index++) {
+                    orders.push(generateRandomOrder(index))  
+                    
+                }
+               
                 dispatch(setOrders(orders))
                 resolve()
             }, 2000)
@@ -118,8 +127,37 @@ export const getHourFromISO = (isoDateString: string) => {
     return hour;
 };
 
+export const sortOrders=(orders:Order[])=>{
 
+    const ordersWithEstimatedFinished = orders.filter((order) => order.statusId !== 1);
+    const ordersWithoutEstimatedFinished = orders.filter((order) => order.statusId === 1);
+    ordersWithEstimatedFinished.sort((order1, order2) => {
+        return isHourGreater(order1.estimatedFinished, order2.estimatedFinished) ? 1 : -1;
+    });
+    const sortedOrders = [...ordersWithEstimatedFinished, ...ordersWithoutEstimatedFinished];
+    return sortedOrders
+}
 
+export const isHourGreater = (hour1: string, hour2: string): boolean => {
+    const [hour1Hours, hour1Minutes] = hour1.split(":");
+    const [hour2Hours, hour2Minutes] = hour2.split(":");
 
+    const date1 = new Date();
+    date1.setHours(Number(hour1Hours));
+    date1.setMinutes(Number(hour1Minutes));
+
+    const date2 = new Date();
+    date2.setHours(Number(hour2Hours));
+    date2.setMinutes(Number(hour2Minutes));
+
+    return date1 > date2;
+};
+export const getCurrentTime = (): string => {
+    const currentDate = new Date();
+    const currentHours = String(currentDate.getHours()).padStart(2, "0");
+    const currentMinutes = String(currentDate.getMinutes()).padStart(2, "0");
+
+    return `${currentHours}:${currentMinutes}`;
+};
 
 

@@ -4,33 +4,19 @@ import { FC } from 'react';
 import { ButtonContainer } from '../styledElements';
 import { Card, CardHeader, ProductDescription, ProductItem, ProductList, TextBold, ProductTitle } from '../styledElements/Orders';
 import ActionButtons from './ActionButtons';
+import { getCurrentTime, isHourGreater } from '@/redux/actions/orderActions';
 interface props {
     order: Order
 }
 const OrderCard: FC<props> = ({ order }) => {
-    const getDeliverTime = (order: Order) => {
-        if (!order.startTime) return "--:--"
-        const dateToShow = order.statusId === 4 ? order.endTime : order.startTime
-        const startTime = new Date(dateToShow);
-        const startTimeMilliseconds = startTime.getTime();
-        const estimatedTimeMilliseconds = order.estimatedTime * 60000;
-        const deliveryTimeMilliseconds = startTimeMilliseconds + estimatedTimeMilliseconds;
-
-        const deliveryTime = new Date(deliveryTimeMilliseconds);
-
-        // Ejemplo de obtención de componentes de fecha y hora
-        const deliveryHour = deliveryTime.getHours();
-        const deliveryMinutes = String(deliveryTime.getMinutes()).padStart(2, '0');
-        return `${deliveryHour}:${deliveryMinutes}`
-    },
-    setcolor = (order: Order) => {
+    const setcolor = (order: Order) => {
             switch (order.statusId) {
                 case 1:
                     return 'secondary'
                 case 2:
-                    return new Date(order.startTime).getTime() + order.estimatedTime * 60000 > Date.now()
+                    return isHourGreater(order.estimatedFinished, getCurrentTime())
                         ? 'primary'
-                        : 'secondary'
+                        : 'info'
                 case 3:
                     return 'success'
                 case 4:
@@ -46,7 +32,7 @@ const OrderCard: FC<props> = ({ order }) => {
         <Card>
             <CardHeader color={setcolor(order)}>
                 <div>
-                    <TextBold>{order.statusId===4?order.endTime:getDeliverTime(order)}</TextBold>
+                    <TextBold>{order.estimatedFinished}</TextBold>
                     <TextBold>${order.totalPrice}</TextBold>
                 </div>
                 <div>
@@ -67,7 +53,7 @@ const OrderCard: FC<props> = ({ order }) => {
                 ))}
             </ProductList>
             <ButtonContainer>
-                <ActionButtons id={order.statusId} orderId={order.id} key={order.id} />
+                <ActionButtons id={order.statusId} orderId={order.id} key={`${order.code}-${order.id}`} />
             </ButtonContainer>
         </Card>);
 }

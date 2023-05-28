@@ -18,6 +18,7 @@ const NavbarContainer = styled.div`
 const Title = styled.h1`
   margin: 0;
   color: white;
+  font-size: 2.2rem;
 `;
 
 const Dropdown = styled.select`
@@ -26,10 +27,17 @@ const Dropdown = styled.select`
 `;
 
 const Option = styled.option``;
-
+const Legend = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: ${(props) => props.theme.colors.text};
+  font-size: 14px;
+  margin-top: 10px;
+`;
 const Navbar = () => {
     const dispatch = useAppDispatch(),
-        statusSelected =useAppSelector(store=>store.orders.statusSelected)
+        {statusSelected, orderStatuses} =useAppSelector(store=>store.orders)
 
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

@@ -10,7 +10,7 @@ import { FC, useEffect } from "react";
 
 const Home: FC = () => {
     const dispatch = useAppDispatch(),
-        { orders, pendingOrder,backupOrders } = useAppSelector(store => store.orders)
+        { orders, pendingOrder,backupOrders,orderStatuses,statusSelected } = useAppSelector(store => store.orders)
 
     useEffect(() => {
         if (!backupOrders.length) {
@@ -30,7 +30,7 @@ const Home: FC = () => {
 
                         )}
                     </OrdersContainer> :
-                    <h3>No hay ordenes pendientes hasta el momento</h3>) :
+                    <h3>No hay resultados {statusSelected?` que tengan el estado ${orderStatuses.find(e => e.id === statusSelected)?.name}`:null}</h3>) :
                 <LoaderContainer>
                     <Spinner />
                 </LoaderContainer>

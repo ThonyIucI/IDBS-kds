@@ -21,6 +21,7 @@ export interface Order{
     endTime: string
     code: string
     estimatedTime: number 
+    estimatedFinished:string
     customer: Customer
     products: Product[]
     totalPrice: number
