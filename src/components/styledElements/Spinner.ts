@@ -1,6 +1,5 @@
 import styled, { keyframes } from 'styled-components';
 
-// Definir la animación del loader
 const spinAnimation = keyframes`
   0% {
     transform: rotate(0deg);

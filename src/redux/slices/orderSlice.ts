@@ -63,7 +63,6 @@ export const orderSlice = createSlice({
                 return order
 
             })
-            console.log(state.statusSelected);
             state.backupOrders = newOrders
             if (state.statusSelected === 0) {
                 state.orders = newOrders

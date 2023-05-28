@@ -1,7 +1,5 @@
 import 'styled-components';
 
-
-// and extend them!
 declare module 'styled-components' {
     export interface DefaultTheme {
         mediaQueries: {
@@ -10,8 +8,6 @@ declare module 'styled-components' {
             medium: string
             large: string
         };
-
-
         colors: {
             primary: string;
             secondary: string;

@@ -30,4 +30,3 @@ const Button = styled.button<ButtonProps>`
   }
 `;
 export default Button
-// Gracias.Ahora puedes darme el ejemplo de un navbar que incluya un desplegable para 

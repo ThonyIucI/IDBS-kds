@@ -32,11 +32,10 @@ export const CardHeader = styled.div<propsy>`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
- border-top-left-radius: 8px;
- border-top-right-radius: 8px;
-
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   color:white;
-    padding: 16px;
+  padding: 16px;
     
 `;
 

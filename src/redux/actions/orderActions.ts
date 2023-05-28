@@ -3,9 +3,9 @@ import { AppDispatch } from "../store"
 import { setOrders, setPendingOrder } from "../slices/orderSlice"
 import { PosibleProducts, orderStatuses } from "@/utils/data"
 
-// Generar código aleatorio
+// Generar código ordenado
 const generateSaleCode = (index: number): string => {
-    return `IDBI-${index+1000}`
+    return `IDBI-${index + 1000}`
 }
 // Obtener una fecha aleatoria menor a la última hora actual
 export const generateRandomTime = (): string => {
@@ -40,8 +40,8 @@ export const addMinutesToTime = (time: string, minutesToAdd: number): string => 
 
     return `${formattedHour}:${formattedMinute}`;
 };
-const generateRandomProducts=()=>{
-    const products:Product[]=[]
+const generateRandomProducts = () => {
+    const products: Product[] = []
     const numProducts = Math.floor(Math.random() * 4) + 1; // Generar un número aleatorio entre 1 y 4
     for (let i = 0; i < numProducts; i++) {
         const randomProduct = PosibleProducts[Math.floor(Math.random() * PosibleProducts.length)];
@@ -55,16 +55,16 @@ const generateRandomProducts=()=>{
             price: randomProduct.price,
             amount: randomAmount,
         };
-      products.push(product)
+        products.push(product)
     }
     const uniqueProducts = products.filter(
         (product, index, self) => index === self.findIndex((p) => p.id === product.id)
     );
     return uniqueProducts
-}    
+}
 
 // Generar datos aleatorios para las órdenes
-const generateRandomOrder = (index:number): Order => {
+const generateRandomOrder = (index: number): Order => {
     const randomId = Math.random().toString(36).slice(2, 9)
     const randomDateTime = generateRandomTime()
     const randomCode = generateSaleCode(index)
@@ -77,8 +77,8 @@ const generateRandomOrder = (index:number): Order => {
     const randomProducts = generateRandomProducts()
     const randomTotalPrice =
         randomProducts.reduce((acc, product) => acc + product.price * product.amount, 0)
-    const randomStatus = orderStatuses[Math.floor(Math.random() *4)]
-    
+    const randomStatus = orderStatuses[Math.floor(Math.random() * 4)]
+
     return {
         id: randomId,
         startTime: randomStatus.id === 1 ? "--:--" : randomDateTime,
@@ -100,12 +100,12 @@ export const getOrders = () => async (dispatch: AppDispatch) => {
         dispatch(setPendingOrder(true))
         await new Promise<void>((resolve) => {
             setTimeout(() => {
-                //Genera 20 elementos aleatoriamente
-                for (let index = 0; index < 30; index++) {
-                    orders.push(generateRandomOrder(index))  
-                    
+                //Genera 40 elementos aleatoriamente
+                for (let index = 0; index < 40; index++) {
+                    orders.push(generateRandomOrder(index))
+
                 }
-               
+
                 dispatch(setOrders(orders))
                 resolve()
             }, 2000)
@@ -127,7 +127,7 @@ export const getHourFromISO = (isoDateString: string) => {
     return hour;
 };
 
-export const sortOrders=(orders:Order[])=>{
+export const sortOrders = (orders: Order[]) => {
 
     const ordersWithEstimatedFinished = orders.filter((order) => order.statusId !== 1);
     const ordersWithoutEstimatedFinished = orders.filter((order) => order.statusId === 1);
@@ -160,4 +160,21 @@ export const getCurrentTime = (): string => {
     return `${currentHours}:${currentMinutes}`;
 };
 
+export const setcolor = (order: Order) => {
+    switch (order.statusId) {
+        case 1:
+            return 'secondary'
+        case 2:
+            return isHourGreater(order.estimatedFinished, getCurrentTime())
+                ? 'primary'
+                : 'info'
+        case 3:
+            return 'success'
+        case 4:
+            return 'error'
+
+        default:
+            break;
+    }
+}
 

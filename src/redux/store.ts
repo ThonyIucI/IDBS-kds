@@ -9,7 +9,6 @@ const persistOrdersConfig = {
     whitelist: ['orders','backupOrders','statusSelected']
 };
 export const store = configureStore({
-    // devTools: true,
     reducer: {
         orders: persistReducer<ReturnType<typeof orderSlice>>(
             persistOrdersConfig,
